@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     const cfg = window.SITE_CONFIG || {};
     const links = cfg.links || {};
-    const textos = cfg.textos || {};
     const investimento = cfg.investimento || {};
 
     const urlGrupo = links.grupoEspera || "https://chat.whatsapp.com/BAM6Ckx4bx43wZoTlQNF1e?s=sw&p=i&iam=2";
     const urlCheckout = links.checkout || "https://pay.kiwify.com.br/1FQv6bb";
     const emailSuporte = links.emailSuporte || "suporte@analuizaeng.com.br";
-    const fimContadorMs = cfg.dataFimContador ? Date.parse(cfg.dataFimContador) : NaN;
 
     function anexarUtms(urlDestino) {
         if (!urlDestino || urlDestino.startsWith("#") || urlDestino.startsWith("mailto:")) return urlDestino;
@@ -51,65 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
         ctas.forEach(function (btn) {
             btn.setAttribute("href", destino);
         });
-    }
-
-    function pad2(n) {
-        return String(Math.max(0, n)).padStart(2, "0");
-    }
-
-    function iniciarContador() {
-        const blocos = Array.from(document.querySelectorAll(".js-countdown"));
-        if (!blocos.length) return;
-
-        let timerId = null;
-
-        function esconderContadores() {
-            blocos.forEach(function (bloco) {
-                bloco.style.display = "none";
-                bloco.setAttribute("aria-hidden", "true");
-            });
-            if (timerId !== null) {
-                window.clearInterval(timerId);
-                timerId = null;
-            }
-        }
-
-        function atualizarRelogio() {
-            const agora = Date.now();
-            const diff = Number.isNaN(fimContadorMs) ? 0 : fimContadorMs - agora;
-
-            if (diff <= 0) {
-                esconderContadores();
-                return;
-            }
-
-            const totalSeg = Math.floor(diff / 1000);
-            const dias = Math.floor(totalSeg / 86400);
-            const horas = Math.floor((totalSeg % 86400) / 3600);
-            const mins = Math.floor((totalSeg % 3600) / 60);
-            const segs = totalSeg % 60;
-
-            blocos.forEach(function (bloco) {
-                const labelEl = bloco.querySelector(".js-countdown-label");
-                const daysEl = bloco.querySelector(".js-cd-days");
-                const hoursEl = bloco.querySelector(".js-cd-hours");
-                const minsEl = bloco.querySelector(".js-cd-mins");
-                const secsEl = bloco.querySelector(".js-cd-secs");
-
-                if (labelEl && textos.labelContador) {
-                    labelEl.textContent = textos.labelContador;
-                }
-                if (daysEl) daysEl.textContent = pad2(dias);
-                if (hoursEl) hoursEl.textContent = pad2(horas);
-                if (minsEl) minsEl.textContent = pad2(mins);
-                if (secsEl) secsEl.textContent = pad2(segs);
-            });
-        }
-
-        atualizarRelogio();
-        if (!Number.isNaN(fimContadorMs) && fimContadorMs > Date.now()) {
-            timerId = window.setInterval(atualizarRelogio, 1000);
-        }
     }
 
     function iniciarLightbox() {
@@ -341,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     aplicarInvestimento();
     atualizarCtas();
-    iniciarContador();
     iniciarLightbox();
     iniciarFaq();
     iniciarModalLegal();

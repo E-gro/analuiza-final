@@ -1,6 +1,5 @@
 window.SITE_CONFIG = {
     forcarModoCheckout: true,
-    dataFimContador: "2026-12-16T18:00:00-03:00",
 
     links: {
         grupoEspera: "https://chat.whatsapp.com/BAM6Ckx4bx43wZoTlQNF1e?s=sw&p=i&iam=2",
@@ -9,10 +8,6 @@ window.SITE_CONFIG = {
         privacidade: "#privacidade",
         termos: "#termos",
         contato: "#contato"
-    },
-
-    textos: {
-        labelContador: "Inscrições abertas • O workshop começa em"
     },
 
     investimento: {
