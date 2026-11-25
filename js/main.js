@@ -51,6 +51,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function controlarFocoModal(modal, botaoFechar) {
+        let focoAnterior = null;
+
+        modal.addEventListener("keydown", function (e) {
+            if (e.key !== "Tab") return;
+            const elementos = Array.from(modal.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'));
+            if (!elementos.length) return;
+            const primeiro = elementos[0];
+            const ultimo = elementos[elementos.length - 1];
+            if (e.shiftKey && document.activeElement === primeiro) {
+                e.preventDefault();
+                ultimo.focus();
+            } else if (!e.shiftKey && document.activeElement === ultimo) {
+                e.preventDefault();
+                primeiro.focus();
+            }
+        });
+
+        return {
+            abrir: function () {
+                focoAnterior = document.activeElement;
+                window.setTimeout(function () {
+                    if (botaoFechar && modal.classList.contains("is-open")) botaoFechar.focus();
+                }, 350);
+            },
+            fechar: function () {
+                if (focoAnterior) focoAnterior.focus();
+            }
+        };
+    }
+
     function iniciarLightbox() {
         const lightbox = document.querySelector(".js-prancha-lightbox");
         if (!lightbox) return;
@@ -59,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const lightboxCaption = lightbox.querySelector(".js-lightbox-caption");
         const closeBtn = lightbox.querySelector(".js-lightbox-close");
         const triggers = document.querySelectorAll(".js-preview-trigger");
+        const focoModal = controlarFocoModal(lightbox, closeBtn);
 
         function abrirLightbox(src, caption) {
             if (lightboxImg) {
@@ -71,12 +103,14 @@ document.addEventListener("DOMContentLoaded", function () {
             lightbox.classList.add("is-open");
             lightbox.setAttribute("aria-hidden", "false");
             document.body.style.overflow = "hidden";
+            focoModal.abrir();
         }
 
         function fecharLightbox() {
             lightbox.classList.remove("is-open");
             lightbox.setAttribute("aria-hidden", "true");
             document.body.style.overflow = "";
+            focoModal.fechar();
         }
 
         triggers.forEach(function (btn) {
@@ -150,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const legalBody = legalModal.querySelector(".js-legal-body");
         const legalClose = legalModal.querySelector(".js-legal-close");
         const footerLinks = document.querySelectorAll(".footer-links a[data-modal]");
+        const focoModal = controlarFocoModal(legalModal, legalClose);
 
         const assuntoEmail = encodeURIComponent("Suporte - Workshop Por Trás do Projeto");
 
@@ -187,12 +222,14 @@ document.addEventListener("DOMContentLoaded", function () {
             legalModal.classList.add("is-open");
             legalModal.setAttribute("aria-hidden", "false");
             document.body.style.overflow = "hidden";
+            focoModal.abrir();
         }
 
         function fecharModalLegal() {
             legalModal.classList.remove("is-open");
             legalModal.setAttribute("aria-hidden", "true");
             document.body.style.overflow = "";
+            focoModal.fechar();
         }
 
         footerLinks.forEach(function (link) {
